@@ -1,4 +1,4 @@
-function validarCampoRequerido (input){
+ export function validarCampoRequerido (input){
     
     if(input.value.trim() != ""){
         console.log("el dato es correcto")
@@ -11,7 +11,7 @@ function validarCampoRequerido (input){
     }
 };
 
-function validarCodigo (input){
+export function validarCodigo (input){
     
     if(input.value.trim() != "" && input.value.trim().length >= 3){
         console.log("el dato es correcto")
@@ -26,7 +26,7 @@ function validarCodigo (input){
 
 
 
-function validarNumeros(input){
+export function validarNumeros(input){
     //creamos la expresion regular
 let patron = /^[0-9]{1,3}$/
 if (patron.test(input.value)){
@@ -41,7 +41,7 @@ if (patron.test(input.value)){
 
 
 
-function validarURL(input){
+export function validarURL(input){
 //crear una expresion regular
 let patron = /^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/;
 if(input.value.trim() != "" && patron.test(input.value.trim())){
@@ -54,41 +54,29 @@ if(input.value.trim() != "" && patron.test(input.value.trim())){
 }
 
 
-function validarGeneral(e){
-    // previene que recargue la pagina
-    e.preventDefault();
-    console.log("desde la funcion validarGeneral")
+export function validarGeneral(){
+        
     let alerta = document.querySelector("#msjAlerta")
     //if (true/false)
 if(validarCodigo(codigo) && validarCampoRequerido(producto) && validarCampoRequerido(descripcion) && validarNumeros(cantidad) && validarURL(url)){
     console.log("aqui tengo que crear el producto")
     alerta.className="alert alert-danger mt-4 d-none"
+    return true;
 }else {
     console.log("corregir datos")
     // aqui mostrar el alert del html
     ;
     alerta.className="alert alert-danger mt-4"
+    return false;
 }
 }
 
-//trae los campos input/textarea
-
-let codigo = document.querySelector("#codigo");
-let cantidad = document.querySelector("#cantidad")
-let url = document.querySelector("#url")
-let producto = document.querySelector("#producto");
-let descripcion = document.querySelector("#descripcion")
-let formulario = document.querySelector("#formProducto")
 
 
-console.log(producto)
-console.log(descripcion)
 
-// agregar el evento
 
-codigo.addEventListener("blur", ()=>{validarCodigo(codigo)})
-cantidad.addEventListener("blur", ()=>{validarNumeros(cantidad)})
-url.addEventListener("blur", ()=>{validarURL(url)});
-producto.addEventListener("blur", ()=>{validarCampoRequerido(producto)});
-descripcion.addEventListener("blur", ()=>{validarCampoRequerido(descripcion)});
-formulario.addEventListener("submit", validarGeneral)
+
+
+
+
+
