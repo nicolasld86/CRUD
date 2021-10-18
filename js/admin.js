@@ -50,8 +50,11 @@ function agregarProducto(){
     
     //mostrar un mensaje al usuario
 
-    //mostrar el objeto en una tabla
-}
+
+    //cargar el producto nuevo en la fila de la tabla
+    crearFilas(productoNuevo)
+
+    }
 
 function limpiarFormulario(){
 
@@ -70,4 +73,29 @@ function limpiarFormulario(){
 function cargaInicial (){
     // traer los productos del local storage si los hubiere sino dejar el arreglo vacio
     listaProductos = JSON.parse(localStorage.getItem("arregloProductos"))  || []
+
+    //si hay prodcutos dentro del arrgelo entonces los muestro en la tabla
+
+
+    listaProductos.forEach((itemProducto)=>{
+        //codigo que se ejecuta por cada elemnto del arreglo
+        crearFilas(itemProducto);
+    });
+    
+}
+
+function crearFilas(itemProducto){
+    let tabla = document.querySelector("#tablaProducto");
+    console.log(itemProducto)
+    tabla.innerHTML += `<tr>
+    <th scope="row">${itemProducto.codigo}</th>
+    <td>${itemProducto.nombre}</td>
+    <td>${itemProducto.descripcion}</td>
+    <td>${itemProducto.cantidad}</td>
+    <td>${itemProducto.url}</td>
+    <td>
+      <button class="btn btn-warning">Editar</button>
+      <button class="btn btn-danger">Borrar</button>
+    </td>
+  </tr>`
 }
