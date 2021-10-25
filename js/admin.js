@@ -8,6 +8,9 @@ let producto = document.querySelector("#producto");
 let descripcion = document.querySelector("#descripcion")
 let formulario = document.querySelector("#formProducto")
 let listaProductos = []
+let productoExistente = false; //si es falsa significa que tengo que agregar un nuevo producto
+//si es true significa que tengo que modificar un producto existente
+let btnNuevoProducto = document.querySelector("#btnNuevoProducto")
 
 cargaInicial();
 
@@ -18,16 +21,25 @@ url.addEventListener("blur", ()=>{validarURL(url)});
 producto.addEventListener("blur", ()=>{validarCampoRequerido(producto)});
 descripcion.addEventListener("blur", ()=>{validarCampoRequerido(descripcion)});
 formulario.addEventListener("submit", guardarProducto)
+btnNuevoProducto.addEventListener("click", limpiarFormulario());
 
 function guardarProducto(e){
 e.preventDefault();
 
 //verificar todas las validaciones
 if(validarGeneral()){
+
+    //aqui pregunto cual es el estado de mi variable productoExistente
+    if (productoExistente == false){
     //tengo que crear el producto
     console.log("aqui creo el producto")
     agregarProducto();
+
 }else{
+    //aqui quiero modificar un producto
+console.log ("se esta modificando un producto")
+actualizarProducto();    
+}}else{
     //aqui no hacemos nada
     console.log("no deberia hacer nada")
 }
@@ -38,11 +50,11 @@ function agregarProducto(){
     let productoNuevo = new Producto(codigo.value, producto.value, descripcion.value, cantidad.value, url.value)
     
     
-    //cargar el producto dentro del arrgelo
+    //cargar el producto dentro del arreglo
     listaProductos.push(productoNuevo);
     console.log(listaProductos)
 
-    // all arreglo de productos lo almaceno  en localstorage
+    // al arreglo de productos lo almaceno  en localstorage
     localStorage.setItem("arregloProductos", JSON.stringify(listaProductos));
 
     //limpiar el formulario
@@ -67,7 +79,9 @@ function limpiarFormulario(){
     url.className = "form-control"
     producto.className = "form-control"
     descripcion.className = "form-control"
-
+    // resetear el valor de la variable buliana 
+    productoExistente = false
+    
 }
 
 function cargaInicial (){
@@ -94,7 +108,7 @@ function crearFilas(itemProducto){
     <td>${itemProducto.cantidad}</td>
     <td>${itemProducto.url}</td>
     <td>
-      <button class="btn btn-warning mb-2" onclick="prepararEdicion(${itemProducto.codigo})">Editar</button>
+      <button class="btn btn-warning mb-2" onclick="prepararEdicion('${itemProducto.codigo}')">Editar</button>
       <button class="btn btn-danger">Borrar</button>
     </td>
   </tr>`
@@ -111,5 +125,33 @@ cantidad.value = productoBuscado.cantidad;
 url.value = productoBuscado.url;
 descripcion.value = productoBuscado.descripcion;
 producto.value = productoBuscado.nombre;
+// cambio el valor de productoExistente
+productoExistente = true
+}
 
+function actualizarProducto (){
+    //buscar la posicion del elemento a editar dentro del arreglo
+    let posicionProducto = listaProductos.findIndex((itemProducto)=>{return itemProducto.codigo == codigo.value})
+    console.log (posicionProducto)
+    //modifical los datos de esa posicion del arreglo
+
+    listaProductos[posicionProducto].nombre = producto.value
+    listaProductos[posicionProducto].cantidad = cantidad.value
+    listaProductos[posicionProducto].descripcion = descripcion.value
+    listaProductos[posicionProducto].url = url.value
+
+    //modificar el local storage
+
+    localStorage.setItem("arregloProductos", JSON.stringify(listaProductos))
+    //volver a dibujar la tabla
+
+        borrarFilas();
+        listaProductos.forEach((itemProducto)=>{crearFilas(itemProducto)})
+
+        limpiarFormulario ();
+}
+
+function borrarFilas(){
+    let tabla = document.querySelector("#tablaProducto");
+    tabla.innerHTML = "";
 }

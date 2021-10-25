@@ -59,7 +59,7 @@ export function validarGeneral(){
     let alerta = document.querySelector("#msjAlerta")
     //if (true/false)
 if(validarCodigo(codigo) && validarCampoRequerido(producto) && validarCampoRequerido(descripcion) && validarNumeros(cantidad) && validarURL(url)){
-    console.log("aqui tengo que crear el producto")
+    
     alerta.className="alert alert-danger mt-4 d-none"
     return true;
 }else {
